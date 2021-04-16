@@ -24,7 +24,11 @@ class SceneViewController: UIViewController, UIPopoverPresentationControllerDele
     var customURL = "None"
     var modelObject: MDLMesh!
     var modelNode: SCNNode!
-    var modelAsset: MDLAsset!{ didSet{ setUp() } }
+    var modelAsset: MDLAsset = .init() {
+        didSet{
+            setUp()
+        }
+    }
     var ARModelScale: Float = 0.07
     var ARRotationAxis: String = "X"
     var selectedColor: UIColor = UIColor.clear
@@ -32,6 +36,7 @@ class SceneViewController: UIViewController, UIPopoverPresentationControllerDele
     var isFromWeb = false
     var blobLink: URL? = nil
     var ARPlaneMode: String = "Horizontal"
+    let viewModel = SceneViewModel()
     
     override var preferredStatusBarStyle: UIStatusBarStyle{
         return .default
@@ -41,7 +46,7 @@ class SceneViewController: UIViewController, UIPopoverPresentationControllerDele
         didSet{
             guard animationMode != oldValue else { return }
             wigwaam.removeAllActions()
-            switch  animationMode {
+            switch animationMode {
             case .rotate:
                 wigwaam.runAction(SCNAction.repeatForever(SCNAction.rotateBy(x: 0, y: 2, z: 0, duration: 4)))
             default: break
@@ -56,32 +61,12 @@ class SceneViewController: UIViewController, UIPopoverPresentationControllerDele
         modelLoadingIndicator.startAnimating()
         navigationController?.setNavigationBarHidden(true, animated: true)
         colorSegments.selectedSegmentIndex = -1
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            if (self?.customURL.contains("blob"))!{ // blob files require special handling
-                do {
-                    let fileURL = URL(string: (self?.customURL)!)!
-                    let fileManager = FileManager.default
-                    let modelData =  try Data(contentsOf: fileURL)
-                    let directory = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-                    let fileName = fileURL.lastPathComponent
-                    try modelData.write(to: directory.appendingPathComponent(fileName).appendingPathExtension("stl"))
-                    let convertedFileURL = try! fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent(fileName).appendingPathExtension("stl")
-                    DispatchQueue.main.async { self?.modelAsset = MDLAsset(url: convertedFileURL)}
-                    self?.ARModelScale = 0.002
-                    self?.blobLink = convertedFileURL
-                } catch {
-                    return
-                }
-            } else if self?.customURL != "None"{
-                if !(self?.isFromWeb)! { self?.customURL = "file://" + (self?.customURL ?? "") }
-                guard let url = URL(string: (self?.customURL)!) else {
-                    fatalError("failed to open model file")
-                }
-                DispatchQueue.main.async { self?.modelAsset = MDLAsset(url: url) }
-            } else {
-                let url = Bundle.main.url(forResource: "Models/AnishinaabeArcs", withExtension: "stl")!
-                DispatchQueue.main.async { self?.modelAsset = MDLAsset(url: url)}
-                self?.ARModelScale = 0.002
+        try? viewModel.loadInitialModel(customURL: customURL, isFromWeb: isFromWeb) { [weak self] result in
+            self?.modelAsset = result.asset
+            self?.ARModelScale = result.arModelScale
+            self?.blobLink = result.blob
+            if let customURL = result.customURL {
+                self?.customURL = customURL
             }
         }
         // hides the ar button if Augmented Reality is not supported on the device.
@@ -120,7 +105,7 @@ class SceneViewController: UIViewController, UIPopoverPresentationControllerDele
             self.present(saveAlert, animated: true, completion: nil)
             UserDefaults.standard.set(false, forKey: "ThirdPartyLaunch")
         }
-        NotificationCenter.default.addObserver(forName: NSNotification.Name.UIApplicationWillTerminate, object: UIApplication.shared, queue: OperationQueue.main){ _ in
+        NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: UIApplication.shared, queue: OperationQueue.main){ _ in
             if let blobs = self.blobLink { try? FileManager.default.removeItem(at: blobs) }
         }
     }
@@ -314,7 +299,20 @@ class ColorPickerCell: UICollectionViewCell{
 }
 
 class ColorPickerCollectionView: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource{
-    let colors: [UIColor] = [UIColor.black, UIColor.blue, UIColor.brown, UIColor.cyan, UIColor.purple,UIColor.gray,UIColor.yellow, UIColor.darkGray,UIColor.magenta, UIColor.rgb(r: 250, g: 190, b:190), UIColor.rgb(r: 210, g: 245, b:60), UIColor.rgb(r: 230, g: 190, b:255), UIColor.rgb(r: 255, g: 250, b:200), UIColor.rgb(r: 255, g: 215, b:180)]
+    let colors: [UIColor] = [
+        UIColor.black,
+        UIColor.blue,
+        UIColor.brown,
+        UIColor.cyan,
+        UIColor.purple,
+        UIColor.gray,UIColor.yellow,
+        UIColor.darkGray,UIColor.magenta,
+        .rgb(r: 250, g: 190, b:190),
+        .rgb(r: 210, g: 245, b:60),
+        .rgb(r: 230, g: 190, b:255),
+        .rgb(r: 255, g: 250, b:200),
+        .rgb(r: 255, g: 215, b:180)
+    ]
     var selectedColor: UIColor!
     let hapticGenerator = UIImpactFeedbackGenerator(style: .medium)
     var selectedIndexPath: IndexPath?

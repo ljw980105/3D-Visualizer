@@ -51,7 +51,7 @@ class TwoDModelCollectionViewController: UICollectionViewController, UIViewContr
         performFetch(withRefresher: nil)
         if #available(iOS 10.0, *){
             let refreshControl = UIRefreshControl()
-            refreshControl.attributedTitle = NSAttributedString(string: "PULL TO REFRESH", attributes: [NSAttributedStringKey.font: UIFont(name: "Avenir", size: 13.0) ?? UIFont.boldSystemFont(ofSize: 13.0)])
+            refreshControl.attributedTitle = NSAttributedString(string: "PULL TO REFRESH", attributes: [NSAttributedString.Key.font: UIFont(name: "Avenir", size: 13.0) ?? UIFont.boldSystemFont(ofSize: 13.0)])
             refreshControl.addTarget(self, action: #selector(refreshModels(sender:)), for: .valueChanged)
             self.collectionView?.refreshControl = refreshControl
         }

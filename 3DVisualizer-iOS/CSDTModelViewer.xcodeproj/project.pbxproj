@@ -88,7 +88,6 @@
 				042BCB3F207F207C0052AC18 /* JSONFetch.swift */,
 				04DFE45820412B5F00AB8FBF /* SettingsHeader.swift */,
 				042BCB41207F29500052AC18 /* ARModel.swift */,
-				042BCB43207FA1BC0052AC18 /* SceneViewModel.swift */,
 			);
 			path = ModelClasses;
 			sourceTree = "<group>";
@@ -114,10 +113,10 @@
 		0447270A2023C64C003A9095 /* CSDTModelViewer */ = {
 			isa = PBXGroup;
 			children = (
+				04B65CD126292B73000DFB02 /* SceneView */,
 				042BCB3C207F18C90052AC18 /* ModelClasses */,
 				044E8F452066C04D00A2FD1A /* Models */,
 				0447270B2023C64C003A9095 /* AppDelegate.swift */,
-				0447270D2023C64C003A9095 /* SceneViewController.swift */,
 				0420FFAC2025021600FCA0EB /* SceneSettingsTableViewController.swift */,
 				04DFE45620412AAD00AB8FBF /* SettingsHeaderView.xib */,
 				04AFD7EE202434B600FA5DFF /* ModelPickerViewController.swift */,
@@ -133,6 +132,15 @@
 				044727172023C64C003A9095 /* Info.plist */,
 			);
 			path = CSDTModelViewer;
+			sourceTree = "<group>";
+		};
+		04B65CD126292B73000DFB02 /* SceneView */ = {
+			isa = PBXGroup;
+			children = (
+				0447270D2023C64C003A9095 /* SceneViewController.swift */,
+				042BCB43207FA1BC0052AC18 /* SceneViewModel.swift */,
+			);
+			path = SceneView;
 			sourceTree = "<group>";
 		};
 		9F5C7117BDE8478DE0DD51DE /* Pods */ = {
@@ -181,6 +189,7 @@
 				TargetAttributes = {
 					044727072023C64C003A9095 = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 1240;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -425,7 +434,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jingweili.csdtModelViewer.CSDTModelViewer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -441,7 +450,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = jingweili.csdtModelViewer.CSDTModelViewer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

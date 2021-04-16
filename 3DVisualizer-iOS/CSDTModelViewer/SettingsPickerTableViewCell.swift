@@ -32,7 +32,7 @@ class SettingsPickerTableViewCell: UITableViewCell, UIPickerViewDelegate, UIPick
 
     func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
         pickerView.subviews[row].backgroundColor = UIColor.white
-        return NSAttributedString(string: dataSource[row], attributes: [NSAttributedStringKey.foregroundColor: UIColor.black])
+        return NSAttributedString(string: dataSource[row], attributes: [NSAttributedString.Key.foregroundColor: UIColor.black])
     }
     
     override func didMoveToSuperview() {

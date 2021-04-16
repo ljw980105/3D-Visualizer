@@ -209,7 +209,7 @@ class SceneSettingsTableViewController: UITableViewController {
         if indexPath.row == 1 && indexPath.section == 0 {
             return 137.0
         }
-        return UITableViewAutomaticDimension
+        return UITableView.automaticDimension
     }
 }
 
