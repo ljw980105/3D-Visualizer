@@ -156,7 +156,6 @@
 				044727052023C64C003A9095 /* Frameworks */,
 				044727062023C64C003A9095 /* Resources */,
 				5D58E5A9DED396EF4AB0D4AA /* [CP] Embed Pods Frameworks */,
-				1D633B481019AA227DCF280F /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -220,28 +219,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		1D633B481019AA227DCF280F /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CSDTModelViewer/Pods-CSDTModelViewer-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		5D58E5A9DED396EF4AB0D4AA /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-CSDTModelViewer/Pods-CSDTModelViewer-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-CSDTModelViewer/Pods-CSDTModelViewer-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -250,7 +234,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-CSDTModelViewer/Pods-CSDTModelViewer-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CSDTModelViewer/Pods-CSDTModelViewer-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		5F0A076D859C52072A26A84B /* [CP] Check Pods Manifest.lock */ = {
