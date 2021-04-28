@@ -54,7 +54,7 @@ class TwoDSpecificsViewController: UIViewController, XMLParserDelegate {
         }
         
         DispatchQueue.global(qos: .userInteractive).async {
-            Alamofire.request(self.specificData.4).response{ response in
+            AF.request(self.specificData.4).response{ response in
                 guard response.error == nil else { return }
                 if let data = response.data{
                     let parser = XMLParser(data: data)

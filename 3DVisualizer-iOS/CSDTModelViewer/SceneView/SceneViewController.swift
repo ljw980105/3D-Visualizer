@@ -11,6 +11,11 @@ import SceneKit
 import ModelIO
 import SceneKit.ModelIO
 import ARKit
+import Combine
+
+fileprivate enum Styles {
+    static let sceneViewBackgroundColor: UIColor = .systemBackground
+}
 
 class SceneViewController: UIViewController, UIPopoverPresentationControllerDelegate {
     @IBOutlet weak var sceneView: SCNView!
@@ -19,24 +24,20 @@ class SceneViewController: UIViewController, UIPopoverPresentationControllerDele
     @IBOutlet weak var ARButton: UIButton!
     @IBOutlet weak var colorSegments: UISegmentedControl!
     var lightingControl: SCNNode!
-    var wigwaam: SCNNode!
-    var cameraNode: SCNNode!
+    var wigwaam: SCNNode?
     var customURL = "None"
     var modelObject: MDLMesh!
     var modelNode: SCNNode!
-    var modelAsset: MDLAsset = .init() {
-        didSet{
-            setUp()
-        }
-    }
+    var modelAsset: MDLAsset = .init()
     var ARModelScale: Float = 0.07
     var ARRotationAxis: String = "X"
     var selectedColor: UIColor = UIColor.clear
-    var IntensityOrTemperature = true
+    var intensityOrTemperature = true
     var isFromWeb = false
     var blobLink: URL? = nil
     var ARPlaneMode: String = "Horizontal"
     let viewModel = SceneViewModel()
+    var disposeBag: [AnyCancellable] = []
     
     override var preferredStatusBarStyle: UIStatusBarStyle{
         return .default
@@ -45,15 +46,14 @@ class SceneViewController: UIViewController, UIPopoverPresentationControllerDele
     var animationMode: animationSettings = .none{
         didSet{
             guard animationMode != oldValue else { return }
-            wigwaam.removeAllActions()
+            wigwaam?.removeAllActions()
             switch animationMode {
             case .rotate:
-                wigwaam.runAction(SCNAction.repeatForever(SCNAction.rotateBy(x: 0, y: 2, z: 0, duration: 4)))
+                wigwaam?.runAction(SCNAction.repeatForever(SCNAction.rotateBy(x: 0, y: 2, z: 0, duration: 4)))
             default: break
             }
         }
     }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,14 +61,52 @@ class SceneViewController: UIViewController, UIPopoverPresentationControllerDele
         modelLoadingIndicator.startAnimating()
         navigationController?.setNavigationBarHidden(true, animated: true)
         colorSegments.selectedSegmentIndex = -1
-        try? viewModel.loadInitialModel(customURL: customURL, isFromWeb: isFromWeb) { [weak self] result in
-            self?.modelAsset = result.asset
-            self?.ARModelScale = result.arModelScale
-            self?.blobLink = result.blob
-            if let customURL = result.customURL {
-                self?.customURL = customURL
+        SceneViewModel.loadInitialModel(customURL: customURL, isFromWeb: isFromWeb)
+            .flatMap { result -> Future<MDLMesh, Error> in
+                self.modelAsset = result.asset
+                self.ARModelScale = result.arModelScale
+                self.blobLink = result.blob
+                return SceneViewModel.loadMeshFromAsset(result.asset)
             }
-        }
+            .catch { error -> Future<MDLMesh, Error> in
+                print(error.localizedDescription)
+                let result = ModelLoadingResult.default
+                self.modelAsset = result.asset
+                self.ARModelScale = result.arModelScale
+                self.blobLink = result.blob
+                return SceneViewModel.loadMeshFromAsset(result.asset)
+            }
+            .sink { [weak self] error in
+                if case .failure(let err) = error {
+                    let alertController = UIAlertController(title: "Error",
+                                                            message: err.localizedDescription,
+                                                            preferredStyle: .alert)
+                    alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                    alertController.view.tintColor = customGreen()
+                    self?.present(alertController, animated: true, completion: nil)
+                    print(err.localizedDescription)
+                }
+                
+                self?.modelLoadingIndicator?.stopAnimating()
+                self?.modelLoadingIndicator?.isOpaque = true
+            } receiveValue: { [weak self] mesh in
+                let sceneResult = SceneViewModel.createScene(from: mesh)
+                let scene = sceneResult.scene
+                self?.sceneView.autoenablesDefaultLighting = true
+                self?.sceneView.allowsCameraControl = true
+                self?.sceneView.scene = scene
+                self?.sceneView.backgroundColor = Styles.sceneViewBackgroundColor
+                self?.modelNode = sceneResult.node
+                self?.modelObject = mesh
+                self?.lightingControl = sceneResult.lightingControl
+                
+                self?.wigwaam = scene.rootNode.childNodes.first
+                self?.modelLoadingIndicator?.stopAnimating()
+                self?.modelLoadingIndicator?.isOpaque = true
+            }
+            .store(in: &disposeBag)
+
+            
         // hides the ar button if Augmented Reality is not supported on the device.
         if !ARWorldTrackingConfiguration.isSupported {
             ARButton.isHidden = true
@@ -79,14 +117,21 @@ class SceneViewController: UIViewController, UIPopoverPresentationControllerDele
         super.viewWillAppear(animated)
         // ask the user to save / not save the 3d model on device
         navigationController?.setNavigationBarHidden(true, animated: true)
-        if UserDefaults.standard.bool(forKey: "ThirdPartyLaunch"){
-            let saveAlert = UIAlertController(title: "Save Model on Device?", message: "If so, enter the name of model in the text field, with no whitespaces. Make sure that the file name ends with extension .stl .", preferredStyle: .alert)
+        if UserDefaults.standard.bool(forKey: "ThirdPartyLaunch") {
+            let saveAlert = UIAlertController(
+                title: "Save Model on Device?",
+                message: """
+                If so, enter the name of model in the text field, with no whitespaces.
+                Make sure that the file name ends with extension .stl .
+                """,
+                preferredStyle: .alert
+            )
             saveAlert.addTextField { textfield in
                 textfield.text = ""
             }
             let dontSaveAction = UIAlertAction(title: "Don't Save", style: .cancel, handler: nil)
             let saveAction = UIAlertAction(title: "Save", style: .default){ _ in
-                guard let fileName = saveAlert.textFields![0].text else { return }
+                guard let fileName = saveAlert.textFields?.first?.text else { return }
                 // now save to file system
                 let fileManager = FileManager.default
                 do {
@@ -96,7 +141,7 @@ class SceneViewController: UIViewController, UIPopoverPresentationControllerDele
                     try modelData.write(to: fileURL)
                     overlayTextWithVisualEffect(using: "Success", on: self.view)
                 } catch {
-                    overlayTextWithVisualEffect(using: "\(error)", on: self.view)
+                    overlayTextWithVisualEffect(using: "\(error.localizedDescription)", on: self.view)
                 }
             }
             saveAlert.view.tintColor = customGreen()
@@ -105,62 +150,15 @@ class SceneViewController: UIViewController, UIPopoverPresentationControllerDele
             self.present(saveAlert, animated: true, completion: nil)
             UserDefaults.standard.set(false, forKey: "ThirdPartyLaunch")
         }
-        NotificationCenter.default.addObserver(forName: UIApplication.willTerminateNotification, object: UIApplication.shared, queue: OperationQueue.main){ _ in
+        NotificationCenter.default.addObserver(
+            forName: UIApplication.willTerminateNotification,
+            object: UIApplication.shared,
+            queue: .main
+        ) { _ in
             if let blobs = self.blobLink { try? FileManager.default.removeItem(at: blobs) }
         }
     }
     
-    fileprivate func setUp(){
-        if let object = modelAsset.object(at: 0) as? MDLMesh { // valid model object from link
-            modelObject = object
-        } else { // invalid model, fall back to default model
-            let url = Bundle.main.url(forResource: "Models/AnishinaabeArcs", withExtension: "stl")!
-            print("Official URL + \(url)")
-            let asset = MDLAsset(url: url)
-            modelObject = asset.object(at: 0) as! MDLMesh
-            let alertController = UIAlertController(title: "Error",
-                                                    message: "Error loading url, falling back to default model",
-                                                    preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            alertController.view.tintColor = customGreen()
-            self.present(alertController, animated: true, completion: nil)
-            ARModelScale = 0.002
-        }
-        
-        let scene = SCNScene()
-        
-        modelNode = SCNNode(mdlObject: modelObject)
-        modelNode.scale = SCNVector3Make(2, 2, 2)
-        modelNode.geometry?.firstMaterial?.blendMode = .alpha
-        
-        scene.rootNode.addChildNode(modelNode)
-        
-        lightingControl = SCNNode()
-        lightingControl.light = SCNLight()
-        lightingControl.light?.type = .omni
-        lightingControl.light?.color = UIColor.white
-        lightingControl.light?.intensity = 100000
-        lightingControl.position = SCNVector3Make(0, 50, 50)
-        scene.rootNode.addChildNode(lightingControl)
-        
-        let camera = SCNCamera()
-        camera.usesOrthographicProjection = true
-        camera.orthographicScale = 9;
-        camera.zNear = 0;
-        camera.zFar = 100;
-        cameraNode = SCNNode()
-        cameraNode.position = SCNVector3Make(50, 50, 50)
-        scene.rootNode.addChildNode(cameraNode)
-        
-        sceneView.autoenablesDefaultLighting = true
-        sceneView.allowsCameraControl = true
-        sceneView.scene = scene
-        sceneView.backgroundColor = UIColor.white
-        
-        wigwaam = scene.rootNode.childNodes.first!
-        modelLoadingIndicator?.stopAnimating()
-        modelLoadingIndicator?.isOpaque = true
-    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -169,6 +167,8 @@ class SceneViewController: UIViewController, UIPopoverPresentationControllerDele
         }
         UserDefaults.standard.set(false, forKey: "AR3DTouch")
     }
+    
+    // MARK: - IBActions
     
     @IBAction func changeModelColor(_ sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
@@ -184,7 +184,7 @@ class SceneViewController: UIViewController, UIPopoverPresentationControllerDele
     }
     
     @IBAction func changeLightIntensity(_ sender: UISlider) {
-        if IntensityOrTemperature {
+        if intensityOrTemperature {
             lightingControl.light?.intensity = CGFloat(sender.value)
         } else {
             lightingControl.light?.temperature = CGFloat(sender.value)
@@ -208,9 +208,9 @@ class SceneViewController: UIViewController, UIPopoverPresentationControllerDele
             animationMode = settings.selectedAnimationSetting
             ARModelScale = settings.ARModelScale
             ARRotationAxis = settings.ARRotationAxis
-            IntensityOrTemperature = settings.IntensityOrTemp
+            intensityOrTemperature = settings.IntensityOrTemp
             ARPlaneMode = settings.planeSettings
-            if IntensityOrTemperature{
+            if intensityOrTemperature{
                 intensitySlider.maximumValue = 200000
                 lightingControl.light?.intensity = CGFloat(intensitySlider.value)
             } else {
@@ -220,11 +220,8 @@ class SceneViewController: UIViewController, UIPopoverPresentationControllerDele
         }
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
+    // MARK: - Navigation
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         var destinationViewController = segue.destination
         if let navigationViewController = destinationViewController as? UINavigationController {
@@ -236,7 +233,7 @@ class SceneViewController: UIViewController, UIPopoverPresentationControllerDele
             dest.animationMode = animationMode
             dest.ARModelScale = ARModelScale
             dest.ARRotationAxis = ARRotationAxis
-            dest.IntensityOrTemp = IntensityOrTemperature
+            dest.IntensityOrTemp = intensityOrTemperature
             dest.planeSettings = ARPlaneMode
         }
         if let dest = destinationViewController as? AugmentedRealityViewController{
@@ -245,14 +242,14 @@ class SceneViewController: UIViewController, UIPopoverPresentationControllerDele
             ar.lightSettings = determineLightType(with: lightingControl.light!)
             ar.blendSettings = determineBlendMode(with: modelNode.geometry!.firstMaterial!.blendMode)
             ar.animationSettings = animationMode
-            ar.lightColor = lightingControl.light!.color as! UIColor
+            ar.lightColor = lightingControl.light!.color as? UIColor
             ar.modelScale = ARModelScale
             ar.rotationAxis = ARRotationAxis
             ar.planeDirection = ARPlaneMode
             dest.ar = ar
         }
         if let dest = destinationViewController as? ColorPickerCollectionView{
-            dest.selectedColor = lightingControl.light?.color as! UIColor
+            dest.selectedColor = lightingControl.light?.color as? UIColor
             if let ppc = segue.destination.popoverPresentationController{
                 ppc.delegate = self
             }
@@ -280,88 +277,3 @@ class SceneViewController: UIViewController, UIPopoverPresentationControllerDele
         }]
     }
 }
-
-class ColorPickerCell: UICollectionViewCell{
-    @IBOutlet weak var colorView: UIView!
-    var color: UIColor!{
-        didSet{
-            colorView.backgroundColor = color
-            colorView.clipsToBounds = true
-            colorView.layer.cornerRadius = 39.0
-        }
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        colorView.layer.borderWidth = 0
-        colorView.layer.borderColor = UIColor.clear.cgColor
-    }
-}
-
-class ColorPickerCollectionView: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource{
-    let colors: [UIColor] = [
-        UIColor.black,
-        UIColor.blue,
-        UIColor.brown,
-        UIColor.cyan,
-        UIColor.purple,
-        UIColor.gray,UIColor.yellow,
-        UIColor.darkGray,UIColor.magenta,
-        .rgb(r: 250, g: 190, b:190),
-        .rgb(r: 210, g: 245, b:60),
-        .rgb(r: 230, g: 190, b:255),
-        .rgb(r: 255, g: 250, b:200),
-        .rgb(r: 255, g: 215, b:180)
-    ]
-    var selectedColor: UIColor!
-    let hapticGenerator = UIImpactFeedbackGenerator(style: .medium)
-    var selectedIndexPath: IndexPath?
-    
-    @IBOutlet weak var colorsColelctionView: UICollectionView! {
-        didSet{
-            colorsColelctionView.dataSource = self
-            colorsColelctionView.delegate = self
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return colors.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "colorsCell", for: indexPath)
-        if let colorCell = cell as? ColorPickerCell{
-            colorCell.color = colors[indexPath.row]
-            if indexPath == selectedIndexPath {
-                colorCell.colorView.layer.borderWidth = 5.0
-                colorCell.colorView.layer.borderColor = customGreen().cgColor
-            }
-        }
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let cell = collectionView.cellForItem(at: indexPath), let custom = cell as? ColorPickerCell{
-            selectedColor = custom.color
-            custom.colorView.layer.borderWidth = 5.0
-            custom.colorView.layer.borderColor = customGreen().cgColor
-            hapticGenerator.impactOccurred()
-            selectedIndexPath = indexPath
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        if let cell = collectionView.cellForItem(at: indexPath), let custom = cell as? ColorPickerCell{
-            custom.colorView.layer.borderWidth = 0
-            custom.colorView.layer.borderColor = UIColor.clear.cgColor
-        }
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let dest = segue.destination as? SceneViewController{
-            dest.selectedColor = selectedColor
-        }
-    }
-    
-}
-

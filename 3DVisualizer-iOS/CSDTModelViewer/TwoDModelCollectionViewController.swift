@@ -69,9 +69,13 @@ class TwoDModelCollectionViewController: UICollectionViewController, UIViewContr
     private func performFetch(withRefresher refresher: UIRefreshControl?){
         cellLoadingIndicator.startAnimating()
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
-        Alamofire.request("https://csdt.rpi.edu/api/projects/").responseJSON { response in
-            guard response.result.isSuccess else {
-                let alert = UIAlertController(title: "Network Fetch Failed", message: "Data could not be fetched. Check your internet connection", preferredStyle: .alert)
+        AF.request("https://csdt.rpi.edu/api/projects/").responseJSON { response in
+            guard let data = response.data else {
+                let alert = UIAlertController(
+                    title: "Network Fetch Failed",
+                    message: "Data could not be fetched. Check your internet connection",
+                    preferredStyle: .alert
+                )
                 alert.addAction(UIAlertAction(title: "OK", style: .default , handler: nil))
                 alert.view.tintColor = customGreen()
                 self.present(alert, animated: true, completion: nil)
@@ -79,7 +83,6 @@ class TwoDModelCollectionViewController: UICollectionViewController, UIViewContr
                 refresher?.endRefreshing()
                 return
             }
-            guard let data = response.data else { return }
             let jsonData = try? JSONSerialization.jsonObject(with: data, options: [])
             self.allData = JSONFetch.fetchFromCSDTServer(with: jsonData)
             self.collectionView?.reloadData()

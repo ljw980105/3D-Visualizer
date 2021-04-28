@@ -16,14 +16,14 @@ func customGreen() -> UIColor {
     return UIColor(red: 34/255, green: 105/255, blue: 7/255, alpha: 1)
 }
 
-enum lightSettings{
+enum lightSettings {
     case ambientSetting
     case directionalSetting
     case omniSetting
     case probeSetting
     case spotSetting
 }
-enum blendModeSettings{
+enum blendModeSettings {
     case alphaSetting
     case addSetting
     case multiplySetting
@@ -31,17 +31,32 @@ enum blendModeSettings{
     case screenSetting
     case replaceSetting
 }
-enum animationSettings{
+enum animationSettings {
     case none
     case rotate
 }
 
-let stringToLightType: Dictionary<String, SCNLight.LightType> =
-    ["Omnidirectional": .omni, "Ambient":.ambient, "Directional":.directional, "Probe": .probe, "Spot": .spot]
-let stringToBlendMode: Dictionary<String, SCNBlendMode> =
-    ["Add": .add, "Alpha": .alpha, "Multiply": .multiply, "Replace": .replace, "Screen": .screen, "Subtract": .subtract]
-let stringToPlaneDetection: Dictionary<String, ARWorldTrackingConfiguration.PlaneDetection> =
-    ["Horizontal":.horizontal, "Vertical": .vertical]
+let stringToLightType: Dictionary<String, SCNLight.LightType> = [
+    "Omnidirectional": .omni,
+    "Ambient":.ambient,
+    "Directional":.directional,
+    "Probe": .probe,
+    "Spot": .spot
+]
+
+let stringToBlendMode: Dictionary<String, SCNBlendMode> = [
+    "Add": .add,
+    "Alpha": .alpha,
+    "Multiply": .multiply,
+    "Replace": .replace,
+    "Screen": .screen,
+    "Subtract": .subtract
+]
+
+let stringToPlaneDetection: [String: ARWorldTrackingConfiguration.PlaneDetection] = [
+    "Horizontal":.horizontal,
+    "Vertical": .vertical
+]
 
 func determineLightType(with light:SCNLight) -> String{
     switch light.type{
@@ -60,8 +75,8 @@ func determineLightType(with light:SCNLight) -> String{
     return "Omnidirectional"
 }
 
-func determineBlendMode(with mode:SCNBlendMode) -> String{
-    switch mode{
+func determineBlendMode(with mode: SCNBlendMode) -> String{
+    switch mode {
     case .add:
         return "Add"
     case .alpha:

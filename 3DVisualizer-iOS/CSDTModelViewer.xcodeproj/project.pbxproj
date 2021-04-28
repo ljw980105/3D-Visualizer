@@ -25,6 +25,8 @@
 		047A8DF82037D0C10066521A /* TwoDModelCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 047A8DF72037D0C10066521A /* TwoDModelCollectionViewController.swift */; };
 		04854EE820312A6E00D4958C /* SettingsPickerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04854EE720312A6E00D4958C /* SettingsPickerTableViewCell.swift */; };
 		0486266120380590003E1400 /* TwoDSpecificsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0486266020380590003E1400 /* TwoDSpecificsViewController.swift */; };
+		049BEA4F262946EF00FC1C69 /* ColorPickerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049BEA4E262946EF00FC1C69 /* ColorPickerCell.swift */; };
+		049BEA52262947A100FC1C69 /* ColorPickerCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 049BEA51262947A100FC1C69 /* ColorPickerCollectionView.swift */; };
 		04AFD7EF202434B600FA5DFF /* ModelPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04AFD7EE202434B600FA5DFF /* ModelPickerViewController.swift */; };
 		04DFE45720412AAD00AB8FBF /* SettingsHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04DFE45620412AAD00AB8FBF /* SettingsHeaderView.xib */; };
 		04DFE45920412B5F00AB8FBF /* SettingsHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04DFE45820412B5F00AB8FBF /* SettingsHeader.swift */; };
@@ -52,6 +54,8 @@
 		047A8DF72037D0C10066521A /* TwoDModelCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoDModelCollectionViewController.swift; sourceTree = "<group>"; };
 		04854EE720312A6E00D4958C /* SettingsPickerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPickerTableViewCell.swift; sourceTree = "<group>"; };
 		0486266020380590003E1400 /* TwoDSpecificsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoDSpecificsViewController.swift; sourceTree = "<group>"; };
+		049BEA4E262946EF00FC1C69 /* ColorPickerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerCell.swift; sourceTree = "<group>"; };
+		049BEA51262947A100FC1C69 /* ColorPickerCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerCollectionView.swift; sourceTree = "<group>"; };
 		04AFD7EE202434B600FA5DFF /* ModelPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelPickerViewController.swift; sourceTree = "<group>"; };
 		04DFE45620412AAD00AB8FBF /* SettingsHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SettingsHeaderView.xib; sourceTree = "<group>"; };
 		04DFE45820412B5F00AB8FBF /* SettingsHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsHeader.swift; sourceTree = "<group>"; };
@@ -134,9 +138,19 @@
 			path = CSDTModelViewer;
 			sourceTree = "<group>";
 		};
+		049BEA4D262946D200FC1C69 /* ColorPicker */ = {
+			isa = PBXGroup;
+			children = (
+				049BEA4E262946EF00FC1C69 /* ColorPickerCell.swift */,
+				049BEA51262947A100FC1C69 /* ColorPickerCollectionView.swift */,
+			);
+			path = ColorPicker;
+			sourceTree = "<group>";
+		};
 		04B65CD126292B73000DFB02 /* SceneView */ = {
 			isa = PBXGroup;
 			children = (
+				049BEA4D262946D200FC1C69 /* ColorPicker */,
 				0447270D2023C64C003A9095 /* SceneViewController.swift */,
 				042BCB43207FA1BC0052AC18 /* SceneViewModel.swift */,
 			);
@@ -236,10 +250,12 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-CSDTModelViewer/Pods-CSDTModelViewer-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/PromiseKit/PromiseKit.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PromiseKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -273,6 +289,7 @@
 			files = (
 				047A8DF22037A4590066521A /* MasterListViewController.swift in Sources */,
 				0420FFAF2025075A00FCA0EB /* Shared.swift in Sources */,
+				049BEA52262947A100FC1C69 /* ColorPickerCollectionView.swift in Sources */,
 				0447270E2023C64C003A9095 /* SceneViewController.swift in Sources */,
 				0486266120380590003E1400 /* TwoDSpecificsViewController.swift in Sources */,
 				042BCB40207F207C0052AC18 /* JSONFetch.swift in Sources */,
@@ -280,6 +297,7 @@
 				04DFE45920412B5F00AB8FBF /* SettingsHeader.swift in Sources */,
 				042BCB3E207F19110052AC18 /* ThreeDDataModel.swift in Sources */,
 				04854EE820312A6E00D4958C /* SettingsPickerTableViewCell.swift in Sources */,
+				049BEA4F262946EF00FC1C69 /* ColorPickerCell.swift in Sources */,
 				042BCB44207FA1BC0052AC18 /* SceneViewModel.swift in Sources */,
 				042BCB42207F29500052AC18 /* ARModel.swift in Sources */,
 				0447270C2023C64C003A9095 /* AppDelegate.swift in Sources */,
@@ -362,7 +380,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -415,7 +433,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
