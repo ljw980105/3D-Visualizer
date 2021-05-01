@@ -75,9 +75,10 @@ class SceneViewModel: NSObject {
         isFromWeb: Bool
     ) -> AnyPublisher<ModelLoadingResult, Error> {
         if isFromWeb && customURL != "None" {
-            return downloadFile(at: customURL)
+            let ext = URL(string: customURL)?.pathExtension ?? "stl"
+            return Networking.downloadFile(at: customURL, renameToExtension: ext)
                 .map { fileURL -> ModelLoadingResult in
-                    .init(asset: MDLAsset(url: fileURL), arModelScale: 0.07, blob: nil, customURL: fileURL.absoluteString)
+                    return .init(asset: MDLAsset(url: fileURL), arModelScale: 0.07, blob: nil, customURL: fileURL.absoluteString)
                 }
                 .eraseToAnyPublisher()
         }
@@ -130,18 +131,6 @@ class SceneViewModel: NSObject {
             }
         }
         .eraseToAnyPublisher()
-    }
-    
-    private static func downloadFile(at link: String) -> Future<URL, Error> {
-        Future { promise in
-            AF.download(link, headers: [:]).responseData { res in
-                if let url = res.fileURL {
-                    promise(.success(url))
-                } else if let error = res.error {
-                    promise(.failure(error))
-                }
-            }
-        }
     }
 }
 

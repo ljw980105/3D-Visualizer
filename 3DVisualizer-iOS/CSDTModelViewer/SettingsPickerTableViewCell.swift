@@ -9,7 +9,7 @@
 import UIKit
 
 class SettingsPickerTableViewCell: UITableViewCell, UIPickerViewDelegate, UIPickerViewDataSource {
-    var dataSource: [String]! = ["X","Y","Z"] // defaulting to x y z
+    var dataSource: [String] = ["X","Y","Z"] // defaulting to x y z
     var selectedSetting: String!
     @IBOutlet weak var pickerTitle: UILabel!
     @IBOutlet weak var pickerView: UIPickerView!
@@ -37,7 +37,6 @@ class SettingsPickerTableViewCell: UITableViewCell, UIPickerViewDelegate, UIPick
     
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
-        pickerView.showsSelectionIndicator = true
     }
 
     override func awakeFromNib() {

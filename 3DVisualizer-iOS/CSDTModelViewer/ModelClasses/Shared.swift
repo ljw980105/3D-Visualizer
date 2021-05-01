@@ -108,7 +108,13 @@ func determinePlaneDetectionMode(with mode: ARWorldTrackingConfiguration.PlaneDe
 func overlayTextWithVisualEffect(using text:String, on view: UIView){
     let blurEffect = UIBlurEffect(style: .prominent)
     let blurredEffectView = UIVisualEffectView(effect: blurEffect)
-    let effectBounds = CGRect(origin: CGPoint(x: UIScreen.main.bounds.width/2 - 150, y: UIScreen.main.bounds.height/2 - 50),size: CGSize(width: 300, height: 100))
+    let effectBounds = CGRect(
+        origin: CGPoint(
+            x: UIScreen.main.bounds.width/2 - 150,
+            y: UIScreen.main.bounds.height/2 - 50
+        ),
+        size: CGSize(width: 300, height: 100)
+    )
     blurredEffectView.frame = effectBounds
     blurredEffectView.layer.cornerRadius = 30.0
     blurredEffectView.clipsToBounds = true

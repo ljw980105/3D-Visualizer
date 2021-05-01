@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0415FADD263DF5890081611D /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0415FADC263DF5890081611D /* Networking.swift */; };
 		0420FFAD2025021600FCA0EB /* SceneSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0420FFAC2025021600FCA0EB /* SceneSettingsTableViewController.swift */; };
 		0420FFAF2025075A00FCA0EB /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0420FFAE2025075A00FCA0EB /* Shared.swift */; };
 		042BCB3E207F19110052AC18 /* ThreeDDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042BCB3D207F19110052AC18 /* ThreeDDataModel.swift */; };
@@ -34,6 +35,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0415FADC263DF5890081611D /* Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
 		0420FFAC2025021600FCA0EB /* SceneSettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneSettingsTableViewController.swift; sourceTree = "<group>"; };
 		0420FFAE2025075A00FCA0EB /* Shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared.swift; sourceTree = "<group>"; };
 		042BCB3D207F19110052AC18 /* ThreeDDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreeDDataModel.swift; sourceTree = "<group>"; };
@@ -84,6 +86,15 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		0408992C2638FD5800587BBF /* AR */ = {
+			isa = PBXGroup;
+			children = (
+				045B39082026327800E3BA39 /* AugmentedRealityViewController.swift */,
+				042BCB41207F29500052AC18 /* ARModel.swift */,
+			);
+			path = AR;
+			sourceTree = "<group>";
+		};
 		042BCB3C207F18C90052AC18 /* ModelClasses */ = {
 			isa = PBXGroup;
 			children = (
@@ -91,7 +102,7 @@
 				0420FFAE2025075A00FCA0EB /* Shared.swift */,
 				042BCB3F207F207C0052AC18 /* JSONFetch.swift */,
 				04DFE45820412B5F00AB8FBF /* SettingsHeader.swift */,
-				042BCB41207F29500052AC18 /* ARModel.swift */,
+				0415FADC263DF5890081611D /* Networking.swift */,
 			);
 			path = ModelClasses;
 			sourceTree = "<group>";
@@ -117,6 +128,7 @@
 		0447270A2023C64C003A9095 /* CSDTModelViewer */ = {
 			isa = PBXGroup;
 			children = (
+				0408992C2638FD5800587BBF /* AR */,
 				04B65CD126292B73000DFB02 /* SceneView */,
 				042BCB3C207F18C90052AC18 /* ModelClasses */,
 				044E8F452066C04D00A2FD1A /* Models */,
@@ -124,7 +136,6 @@
 				0420FFAC2025021600FCA0EB /* SceneSettingsTableViewController.swift */,
 				04DFE45620412AAD00AB8FBF /* SettingsHeaderView.xib */,
 				04AFD7EE202434B600FA5DFF /* ModelPickerViewController.swift */,
-				045B39082026327800E3BA39 /* AugmentedRealityViewController.swift */,
 				0447270F2023C64C003A9095 /* Main.storyboard */,
 				0486266020380590003E1400 /* TwoDSpecificsViewController.swift */,
 				047A8DF72037D0C10066521A /* TwoDModelCollectionViewController.swift */,
@@ -250,12 +261,10 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-CSDTModelViewer/Pods-CSDTModelViewer-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/PromiseKit/PromiseKit.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PromiseKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -287,6 +296,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0415FADD263DF5890081611D /* Networking.swift in Sources */,
 				047A8DF22037A4590066521A /* MasterListViewController.swift in Sources */,
 				0420FFAF2025075A00FCA0EB /* Shared.swift in Sources */,
 				049BEA52262947A100FC1C69 /* ColorPickerCollectionView.swift in Sources */,
