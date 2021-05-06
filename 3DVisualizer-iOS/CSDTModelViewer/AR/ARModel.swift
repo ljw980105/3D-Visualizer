@@ -95,7 +95,7 @@ class ARModel:NSObject{
         newPlane.position = SCNVector3Make(planeAnchor.center.x, Float(planeHeight/2), planeAnchor.center.z)
         
         lightingControl.light = SCNLight()
-        lightingControl.light?.type = .directional//stringToLightType[lightSettings]!
+        lightingControl.light?.type = .directional
         lightingControl.light?.intensity = 10000
         lightingControl.position = SCNVector3Make(242, 100, 118)
         lightingControl.light?.color = lightColor

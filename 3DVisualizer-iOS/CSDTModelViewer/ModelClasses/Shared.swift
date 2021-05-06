@@ -175,12 +175,6 @@ func setupCollectionViewLayout(with collectionView: UICollectionView?,
     collectionView?.collectionViewLayout = layout
 }
 
-extension UIColor{
-    class func rgb(r red:CGFloat, g green:CGFloat, b blue:CGFloat) -> UIColor{
-        return UIColor(red: red/255, green: green/255, blue: blue/255, alpha: 1)
-    }
-}
-
 extension Notification.Name{
     static let onLightSwitchChange = Notification.Name("on-light-switch-change")
     static let viewARPeekDidDismiss = Notification.Name("viewARPeekDidDismiss");

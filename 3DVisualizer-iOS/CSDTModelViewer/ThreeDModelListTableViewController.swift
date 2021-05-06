@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ThreeDModelListTableViewController: UITableViewController, UIViewControllerPreviewingDelegate {
+class ThreeDModelListTableViewController: UITableViewController {
     
     var modelNames: [[String]] = [[],[]]
     let sectionTitles = ["Default Models", "Saved Models"]
@@ -123,7 +123,9 @@ class ThreeDModelListTableViewController: UITableViewController, UIViewControlle
             }
         }
     }
-    
+}
+
+extension ThreeDModelListTableViewController: UIViewControllerPreviewingDelegate {
     // MARK: UIViewControllerPreviewingDelegate
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         guard let indexPath = tableView.indexPathForRow(at: location), let cell = tableView.cellForRow(at: indexPath), let threeDVC = storyboard?.instantiateViewController(withIdentifier: "sceneViewController") as? SceneViewController else { return nil }
@@ -144,5 +146,4 @@ class ThreeDModelListTableViewController: UITableViewController, UIViewControlle
         self.tabBarController?.tabBar.isHidden = true
         present(viewControllerToCommit, animated: true, completion: nil)
     }
- 
 }

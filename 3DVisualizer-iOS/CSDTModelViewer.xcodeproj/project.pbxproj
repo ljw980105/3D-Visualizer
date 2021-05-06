@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0415FADD263DF5890081611D /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0415FADC263DF5890081611D /* Networking.swift */; };
+		0415FAE1263E03560081611D /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0415FAE0263E03560081611D /* UIColor+Extensions.swift */; };
 		0420FFAD2025021600FCA0EB /* SceneSettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0420FFAC2025021600FCA0EB /* SceneSettingsTableViewController.swift */; };
 		0420FFAF2025075A00FCA0EB /* Shared.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0420FFAE2025075A00FCA0EB /* Shared.swift */; };
 		042BCB3E207F19110052AC18 /* ThreeDDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042BCB3D207F19110052AC18 /* ThreeDDataModel.swift */; };
@@ -36,6 +37,7 @@
 
 /* Begin PBXFileReference section */
 		0415FADC263DF5890081611D /* Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
+		0415FAE0263E03560081611D /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 		0420FFAC2025021600FCA0EB /* SceneSettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneSettingsTableViewController.swift; sourceTree = "<group>"; };
 		0420FFAE2025075A00FCA0EB /* Shared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shared.swift; sourceTree = "<group>"; };
 		042BCB3D207F19110052AC18 /* ThreeDDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreeDDataModel.swift; sourceTree = "<group>"; };
@@ -95,9 +97,28 @@
 			path = AR;
 			sourceTree = "<group>";
 		};
+		0415FADE263DFF390081611D /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				0420FFAC2025021600FCA0EB /* SceneSettingsTableViewController.swift */,
+				04854EE720312A6E00D4958C /* SettingsPickerTableViewCell.swift */,
+				04DFE45620412AAD00AB8FBF /* SettingsHeaderView.xib */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		0415FADF263E03470081611D /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				0415FAE0263E03560081611D /* UIColor+Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		042BCB3C207F18C90052AC18 /* ModelClasses */ = {
 			isa = PBXGroup;
 			children = (
+				0415FADF263E03470081611D /* Extensions */,
 				042BCB3D207F19110052AC18 /* ThreeDDataModel.swift */,
 				0420FFAE2025075A00FCA0EB /* Shared.swift */,
 				042BCB3F207F207C0052AC18 /* JSONFetch.swift */,
@@ -130,18 +151,16 @@
 			children = (
 				0408992C2638FD5800587BBF /* AR */,
 				04B65CD126292B73000DFB02 /* SceneView */,
+				0415FADE263DFF390081611D /* Settings */,
 				042BCB3C207F18C90052AC18 /* ModelClasses */,
 				044E8F452066C04D00A2FD1A /* Models */,
 				0447270B2023C64C003A9095 /* AppDelegate.swift */,
-				0420FFAC2025021600FCA0EB /* SceneSettingsTableViewController.swift */,
-				04DFE45620412AAD00AB8FBF /* SettingsHeaderView.xib */,
 				04AFD7EE202434B600FA5DFF /* ModelPickerViewController.swift */,
 				0447270F2023C64C003A9095 /* Main.storyboard */,
 				0486266020380590003E1400 /* TwoDSpecificsViewController.swift */,
 				047A8DF72037D0C10066521A /* TwoDModelCollectionViewController.swift */,
 				047A8DF52037CAED0066521A /* ThreeDModelListTableViewController.swift */,
 				047A8DF12037A4590066521A /* MasterListViewController.swift */,
-				04854EE720312A6E00D4958C /* SettingsPickerTableViewCell.swift */,
 				044727122023C64C003A9095 /* Assets.xcassets */,
 				044727142023C64C003A9095 /* LaunchScreen.storyboard */,
 				044727172023C64C003A9095 /* Info.plist */,
@@ -307,6 +326,7 @@
 				04DFE45920412B5F00AB8FBF /* SettingsHeader.swift in Sources */,
 				042BCB3E207F19110052AC18 /* ThreeDDataModel.swift in Sources */,
 				04854EE820312A6E00D4958C /* SettingsPickerTableViewCell.swift in Sources */,
+				0415FAE1263E03560081611D /* UIColor+Extensions.swift in Sources */,
 				049BEA4F262946EF00FC1C69 /* ColorPickerCell.swift in Sources */,
 				042BCB44207FA1BC0052AC18 /* SceneViewModel.swift in Sources */,
 				042BCB42207F29500052AC18 /* ARModel.swift in Sources */,

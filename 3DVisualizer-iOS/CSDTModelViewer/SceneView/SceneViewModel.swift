@@ -84,6 +84,7 @@ class SceneViewModel: NSObject {
         }
         return Future<ModelLoadingResult, Error> { promise in
             do {
+                // 2018 CSDT Servers has STL models in blob format
                 if customURL.contains("blob") { // blob files require special handling
                     guard let fileURL = URL(string: customURL) else {
                         throw SceneViewModel.unknownError
@@ -112,6 +113,7 @@ class SceneViewModel: NSObject {
                         blob: convertedFileURL,
                         customURL: nil
                     )))
+                    // Opening Downloaded STLs thru the app
                 } else if customURL != "None" {
                     var customURL2 = customURL
                     if !isFromWeb {
