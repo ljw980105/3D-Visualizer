@@ -12,14 +12,14 @@ import SceneKit
 import SceneKit.ModelIO
 import UIKit
 
-class ARModel:NSObject{
+class ARModel: NSObject {
     var model: MDLMesh!
     var isModelAdded = false
     var isPlaneAdded = false
     let lightingControl = SCNNode()
     var lightSettings: String!
     var blendSettings: String!
-    var animationSettings: animationSettings!
+    var animationSettings: AnimationSettings!
     var nodeToUse: SCNNode!
     var lightColor: UIColor!
     let planeHeight:CGFloat = 0.01
@@ -38,6 +38,8 @@ class ARModel:NSObject{
     func configureHitTest(with hit: ARHitTestResult) {
         if isThreeD{
             nodeToUse = SCNNode(mdlObject: model)
+            let meshes = (model.submeshes as! [MDLSubmesh]).first!
+            print("")
         } else {
             let geometry = SCNBox(width: 300, height: 300, length: 0.01, chamferRadius: 0)
             geometry.firstMaterial?.diffuse.contents = twoDImage

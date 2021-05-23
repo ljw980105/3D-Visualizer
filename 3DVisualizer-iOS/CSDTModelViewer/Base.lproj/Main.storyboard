@@ -90,11 +90,11 @@
             <objects>
                 <viewController storyboardIdentifier="sceneViewController" id="BYZ-38-t0r" customClass="SceneViewController" customModule="CSDTModelViewer" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="790"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <sceneKitView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" jitteringEnabled="YES" wantsMultisampling="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wuT-3W-Cc6">
-                                <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                                <rect key="frame" x="0.0" y="0.0" width="390" height="790"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <gestureRecognizers/>
                                 <connections>
@@ -113,7 +113,7 @@
                                 <blurEffect style="systemChromeMaterial"/>
                             </visualEffectView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TVG-qt-xUS">
-                                <rect key="frame" x="0.0" y="0.0" width="390" height="140"/>
+                                <rect key="frame" x="0.0" y="-44" width="390" height="184"/>
                                 <subviews>
                                     <view opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="s2h-3U-n4x">
                                         <rect key="frame" x="0.0" y="11" width="390" height="120"/>
@@ -197,11 +197,11 @@
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </view>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="j0M-Ko-Pa6">
-                                <rect key="frame" x="176.66666666666666" y="403.66666666666669" width="37" height="37"/>
+                                <rect key="frame" x="176.66666666666666" y="376.66666666666669" width="37" height="37"/>
                                 <color key="color" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </activityIndicatorView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LCs-by-1xd">
-                                <rect key="frame" x="330" y="794" width="57.666666666666686" height="42.666666666666629"/>
+                                <rect key="frame" x="330" y="740" width="57.666666666666686" height="42.666666666666629"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="LCs-by-1xd" secondAttribute="height" multiplier="42:31" id="HqT-eA-pr5"/>
                                 </constraints>
@@ -216,7 +216,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="03M-f7-KqS">
-                                <rect key="frame" x="18" y="765" width="35" height="30"/>
+                                <rect key="frame" x="18" y="711" width="35" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="nzz-1t-0m5"/>
                                 </constraints>
@@ -225,7 +225,7 @@
                                     <color key="titleColor" red="0.1333333333" green="0.41176470590000003" blue="0.027450980390000001" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
-                                    <segue destination="tNc-x8-Nzf" kind="presentation" identifier="arsegue" modalPresentationStyle="fullScreen" modalTransitionStyle="flipHorizontal" id="tMZ-Hj-rYz"/>
+                                    <action selector="arButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Zd2-bP-4Xh"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -651,13 +651,13 @@
         <!--Augmented Reality View Controller-->
         <scene sceneID="Dhb-72-nOT">
             <objects>
-                <viewController id="tNc-x8-Nzf" customClass="AugmentedRealityViewController" customModule="CSDTModelViewer" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ARViewController" id="tNc-x8-Nzf" customClass="AugmentedRealityViewController" customModule="CSDTModelViewer" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="nsf-QK-CTr">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="790"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" jitteringEnabled="YES" wantsMultisampling="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rjU-FU-b9A">
-                                <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                                <rect key="frame" x="0.0" y="0.0" width="390" height="790"/>
                                 <gestureRecognizers/>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="9cj-Nf-QXY" appends="YES" id="R8K-p5-YP0"/>
@@ -667,7 +667,7 @@
                                 </connections>
                             </arscnView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QfC-6P-SGf">
-                                <rect key="frame" x="15" y="56" width="59" height="34"/>
+                                <rect key="frame" x="15" y="12" width="59" height="34"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="QfC-6P-SGf" secondAttribute="height" multiplier="26:15" id="2cJ-us-erV"/>
                                 </constraints>
@@ -680,7 +680,7 @@
                                 </connections>
                             </button>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EHj-Nc-RHQ">
-                                <rect key="frame" x="110" y="54" width="170" height="40"/>
+                                <rect key="frame" x="110" y="10" width="170" height="40"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="bPX-sp-WpD">
                                     <rect key="frame" x="0.0" y="0.0" width="170" height="40"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -704,7 +704,7 @@
                                 <blurEffect style="systemChromeMaterial"/>
                             </visualEffectView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="owz-dj-Mbs">
-                                <rect key="frame" x="327.33333333333331" y="58" width="42.666666666666686" height="42.666666666666657"/>
+                                <rect key="frame" x="327.33333333333331" y="13.999999999999996" width="42.666666666666686" height="42.666666666666657"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="owz-dj-Mbs" secondAttribute="height" multiplier="1:1" id="oYb-hP-I7C"/>
                                 </constraints>
@@ -1000,8 +1000,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="tMZ-Hj-rYz"/>
-        <segue reference="inj-tq-Xef"/>
+        <segue reference="lvY-b4-7g6"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="PickFromListIcon" width="223.33332824707031" height="54.333332061767578"/>

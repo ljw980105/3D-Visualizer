@@ -116,12 +116,12 @@ class TwoDSpecificsViewController: UIViewController, XMLParserDelegate {
             ar.twoDImage = specificsImage.image
             ar.lightSettings = SCNLight().stringForm
             ar.blendSettings = determineBlendMode(with: SCNBlendMode.alpha)
-            ar.animationSettings = animationSettings.none
+            ar.animationSettings = AnimationSettings.none
             ar.lightColor = UIColor.white
             ar.modelScale = 0.002
             ar.rotationAxis = "Y"
             ar.planeDirection = isHorizontal ? "Horizontal" : "Vertical"
-            dest.ar = ar
+            dest.viewModel = ar
         }
         if let dest = destination as? SceneViewController{
             dest.customURL = ARModelLink

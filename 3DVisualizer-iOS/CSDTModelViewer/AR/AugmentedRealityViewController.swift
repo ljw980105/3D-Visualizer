@@ -12,13 +12,21 @@ import SceneKit
 import ModelIO
 import SceneKit.ModelIO
 
-class AugmentedRealityViewController: UIViewController, ARSCNViewDelegate {
+class AugmentedRealityViewController: UIViewController {
     @IBOutlet weak var sceneView: ARSCNView!
     @IBOutlet weak var statusBackground: UIVisualEffectView!
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var doneButton: UIButton!
     
-    var ar:ARModel!
+    var viewModel: ARModel!
+    
+    /// temporary initializer for now due to using storyboards
+    static func instantiate(viewModel: ARModel) -> AugmentedRealityViewController {
+        let vc = UIStoryboard(name: "Main", bundle: Bundle.main)
+            .instantiateViewController(identifier: "ARViewController") as! AugmentedRealityViewController
+        vc.viewModel = viewModel
+        return vc
+    }
     
     @IBAction func exitARSession(_ sender: Any) {
         dismiss(animated: true, completion: nil)
@@ -39,13 +47,14 @@ class AugmentedRealityViewController: UIViewController, ARSCNViewDelegate {
         statusBackground.layer.cornerRadius = 10.0
         //ar = ARModel()
         configureDropShadow(with: doneButton)
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         // Create a session configuration
         let configuration = ARWorldTrackingConfiguration()
-        configuration.planeDetection = stringToPlaneDetection[ar.planeDirection]!
+        configuration.planeDetection = stringToPlaneDetection[viewModel.planeDirection]!
         configuration.worldAlignment = .gravityAndHeading
         configuration.isLightEstimationEnabled = true
         
@@ -68,34 +77,34 @@ class AugmentedRealityViewController: UIViewController, ARSCNViewDelegate {
     // MARK: - Gesture Recognizers
     
     @IBAction func hitTestWithTap(_ sender: UITapGestureRecognizer) {
-        guard !ar.isModelAdded else { return }
+        guard !viewModel.isModelAdded else { return }
         let touchLocation = sender.location(in: sceneView)
         if let hit = sceneView.hitTest(touchLocation, types: .featurePoint).first{
             sceneView.session.add(anchor: ARAnchor(transform: hit.worldTransform))
             DispatchQueue.main.async { overlayTextWithVisualEffect(using: "Success", on: self.view) }
-            ar.configureHitTest(with: hit)
-            sceneView.scene.rootNode.addChildNode(ar.nodeToUse)
+            viewModel.configureHitTest(with: hit)
+            sceneView.scene.rootNode.addChildNode(viewModel.nodeToUse)
         } else {
             DispatchQueue.main.async { overlayTextWithVisualEffect(using: "Try Again", on: self.view)}
         }
     }
     
     @IBAction func changeLightPosition(_ sender: UIPanGestureRecognizer) {
-        guard ar.isModelAdded else { return }
+        guard viewModel.isModelAdded else { return }
         let location = sender.location(in: sceneView)
-        ar.lightingControl.position = SCNVector3Make(Float(location.x), 100, Float(location.y))
+        viewModel.lightingControl.position = SCNVector3Make(Float(location.x), 100, Float(location.y))
         //statusLabel.text = "\(location.x),100,\(location.y)"
     }
     
     @IBAction func rotateModel(_ sender: UIRotationGestureRecognizer) {
-        guard ar.isModelAdded else { return }
+        guard viewModel.isModelAdded else { return }
         if sender.state == .changed{
-            ar.handleRotation(with: sender.rotation)
+            viewModel.handleRotation(with: sender.rotation)
         }
     }
     
     @IBAction func zoomModel(_ sender: UIPinchGestureRecognizer) {
-        ar.handleZoom(with: sender)
+        viewModel.handleZoom(with: sender)
     }
     
     @IBAction func resetAR(_ sender: UIButton) {
@@ -103,35 +112,38 @@ class AugmentedRealityViewController: UIViewController, ARSCNViewDelegate {
         sceneView.scene.rootNode.enumerateChildNodes { node, _ in
             node.removeFromParentNode()
         }
-        ar.isModelAdded = false
-        ar.isPlaneAdded = false
+        viewModel.isModelAdded = false
+        viewModel.isPlaneAdded = false
         // Run the view's session
         let configuration = ARWorldTrackingConfiguration()
-        configuration.planeDetection = stringToPlaneDetection[ar.planeDirection]!
+        configuration.planeDetection = stringToPlaneDetection[viewModel.planeDirection]!
         configuration.worldAlignment = .gravityAndHeading
         configuration.isLightEstimationEnabled = true
         sceneView.session.run(configuration, options: [.removeExistingAnchors, .resetTracking])
-        
     }
+    
+}
+
+extension AugmentedRealityViewController: ARSCNViewDelegate {
     // MARK: - ARSCNViewDelegate
     
     func renderer(_ renderer: SCNSceneRenderer, nodeFor anchor: ARAnchor) -> SCNNode? {
         var node: SCNNode?
         
         if let planeAnchor = anchor as? ARPlaneAnchor{
-            if !ar.isModelAdded && !ar.isPlaneAdded{
+            if !viewModel.isModelAdded && !viewModel.isPlaneAdded{
                 DispatchQueue.main.async { overlayTextWithVisualEffect(using: "Surface Recognized", on: self.view) }
                 node = SCNNode()
-                ar.handlePlaneAddition(usingAnchor: planeAnchor, andNode: node)
+                viewModel.handlePlaneAddition(usingAnchor: planeAnchor, andNode: node)
             }
-        }        
+        }
         return node
     }
     
     func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
         //guard isModelAdded else { return }
         if let planeAnchor = anchor as? ARPlaneAnchor{
-            ar.handleNodeUpdates(with: node, andAnchor: planeAnchor)
+            viewModel.handleNodeUpdates(with: node, andAnchor: planeAnchor)
         }
     }
     
@@ -171,5 +183,4 @@ class AugmentedRealityViewController: UIViewController, ARSCNViewDelegate {
             }
         }
     }
-
 }

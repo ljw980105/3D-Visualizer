@@ -32,7 +32,7 @@ class SceneViewController: UIViewController {
         return .default
     }
     
-    var animationMode: animationSettings = .none{
+    var animationMode: AnimationSettings = .none{
         didSet{
             guard animationMode != oldValue else { return }
             viewModel.wigwaam?.removeAllActions()
@@ -95,9 +95,7 @@ class SceneViewController: UIViewController {
                 started: {
                     UserDefaults.standard.set(false, forKey: "ThirdPartyLaunch")
                 }, completion: { [weak self] str in
-                    if let view = self?.view {
-                        overlayTextWithVisualEffect(using: str, on: view)
-                    }
+                    overlayTextWithVisualEffect(using: str, on: self?.view)
                 })
             self.present(saveAlert, animated: true, completion: nil)
         }
@@ -154,6 +152,28 @@ class SceneViewController: UIViewController {
         if let blobs = viewModel.blobLink { try? FileManager.default.removeItem(at: blobs) }
     }
     
+    @IBAction func arButtonTapped(_ sender: UIButton) {
+        let alert = viewModel.getARVCAlert { [weak self] button in
+            switch button {
+            case .custom(let text):
+                if let animationMode = self?.animationMode,
+                   let vc = self?.viewModel.getARVC(
+                        animationSettings: animationMode,
+                        useLidar: text == "LIDAR"
+                   ) {
+                    vc.modalPresentationStyle = .fullScreen
+                    self?.present(vc, animated: true)
+                }
+            }
+        }
+        if let ppc = alert.popoverPresentationController {
+            ppc.sourceView = view
+            ppc.sourceRect = sender.frame
+        }
+        present(alert, animated: true)
+    }
+    
+    
     @IBAction func updateSceneSettings(from segue:UIStoryboardSegue){
         if let settings = segue.source as? SceneSettingsTableViewController{
             viewModel.modelNode.geometry?.firstMaterial?.blendMode = stringToBlendMode[settings.selectedBlendSetting] ?? .add
@@ -188,18 +208,6 @@ class SceneViewController: UIViewController {
             dest.ARRotationAxis = viewModel.ARRotationAxis
             dest.IntensityOrTemp = viewModel.intensityOrTemperature
             dest.planeSettings = viewModel.ARPlaneMode
-        }
-        if let dest = destinationViewController as? AugmentedRealityViewController{
-            let ar = ARModel()
-            ar.model = viewModel.modelObject
-            ar.lightSettings = viewModel.lightingControl.light?.stringForm
-            ar.blendSettings = determineBlendMode(with: viewModel.modelNode.geometry?.firstMaterial?.blendMode ?? .add)
-            ar.animationSettings = animationMode
-            ar.lightColor = viewModel.lightingControl.light?.color as? UIColor
-            ar.modelScale = viewModel.ARModelScale
-            ar.rotationAxis = viewModel.ARRotationAxis
-            ar.planeDirection = viewModel.ARPlaneMode
-            dest.ar = ar
         }
         if let dest = destinationViewController as? ColorPickerCollectionView{
             dest.selectedColor = viewModel.lightingControl.light?.color as? UIColor

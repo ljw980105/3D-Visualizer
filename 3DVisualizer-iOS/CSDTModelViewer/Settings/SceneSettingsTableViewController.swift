@@ -25,12 +25,12 @@ class SceneSettingsTableViewController: UITableViewController {
     var planeSettings: String!
     var selectedLightSetting: String!
     var selectedBlendSetting: String!
-    var selectedAnimationSetting: animationSettings!
+    var selectedAnimationSetting: AnimationSettings!
     var prevLightIndex: IndexPath!
     var prevBlendIndex: IndexPath!
     var prevPlaneIndex: IndexPath!
     var prevAnimationIndex: IndexPath!
-    var animationMode: animationSettings!
+    var animationMode: AnimationSettings!
     var ARModelScale:Float!
     var ARRotationAxis: String!
     var IntensityOrTemp = true
@@ -104,7 +104,7 @@ class SceneSettingsTableViewController: UITableViewController {
             cell.textLabel?.text = allSettings[indexPath.section][indexPath.row]
         case 4:
             let curr = allSettings[indexPath.section][indexPath.row]
-            if ((animationMode == animationSettings.none && curr == "None") || (animationMode == .rotate && curr == "Rotate")) {
+            if ((animationMode == AnimationSettings.none && curr == "None") || (animationMode == .rotate && curr == "Rotate")) {
                 prevAnimationIndex = indexPath
                 cell.accessoryType = .checkmark
                 cell.tintColor = customGreen()
@@ -154,7 +154,7 @@ class SceneSettingsTableViewController: UITableViewController {
             tableView.cellForRow(at: prevAnimationIndex)?.accessoryType = .none
             switch allSettings[indexPath.section][indexPath.row]{
                 case "None":
-                    selectedAnimationSetting = animationSettings.none
+                    selectedAnimationSetting = AnimationSettings.none
                 case "Rotate":
                     selectedAnimationSetting = .rotate
                 default: break

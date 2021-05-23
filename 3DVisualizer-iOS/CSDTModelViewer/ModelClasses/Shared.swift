@@ -31,7 +31,7 @@ enum blendModeSettings {
     case screenSetting
     case replaceSetting
 }
-enum animationSettings {
+enum AnimationSettings {
     case none
     case rotate
 }
@@ -107,7 +107,7 @@ func determinePlaneDetectionMode(with mode: ARWorldTrackingConfiguration.PlaneDe
     }
 }
 
-func overlayTextWithVisualEffect(using text:String, on view: UIView){
+func overlayTextWithVisualEffect(using text: String, on view: UIView? ) {
     let blurEffect = UIBlurEffect(style: .systemChromeMaterial)
     let blurredEffectView = UIVisualEffectView(effect: blurEffect)
     let effectBounds = CGRect(
@@ -130,8 +130,8 @@ func overlayTextWithVisualEffect(using text:String, on view: UIView){
     label.minimumScaleFactor = 0.6
     label.numberOfLines = 0
     
-    view.addSubview(blurredEffectView)
-    view.addSubview(label)
+    view?.addSubview(blurredEffectView)
+    view?.addSubview(label)
     Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { _ in
         [blurredEffectView, label].forEach { view in
             UIView.transition(

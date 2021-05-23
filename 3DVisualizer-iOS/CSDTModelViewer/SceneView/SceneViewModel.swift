@@ -12,6 +12,7 @@ import SceneKit.ModelIO
 import UIKit
 import Combine
 import Alamofire
+import ARKit
 
 // converison to MVC in progress
 class SceneViewModel: NSObject {
@@ -28,6 +29,7 @@ class SceneViewModel: NSObject {
     var isFromWeb = false
     var blobLink: URL? = nil
     var ARPlaneMode: String = "Horizontal"
+    var currentAlert: SimpleAlert?
     override init() {
         super.init()
     }
@@ -225,6 +227,39 @@ class SceneViewModel: NSObject {
         saveAlert.addAction(saveAction)
         started()
         return saveAlert
+    }
+    
+    func getARVCAlert(tappped: @escaping (SimpleAlertButton) -> Void) -> UIAlertController {
+        // LIDAR ----
+        var alert = SimpleAlert()
+            .addButton(.custom("Standard"))
+            .setTitle("Use AR Technology:")
+            .setStyle(.actionSheet)
+            .handleButtonTapped(tappped)
+        currentAlert = alert
+        if ARWorldTrackingConfiguration.supportsSceneReconstruction(.mesh) {
+            alert = alert.addButton(.custom("LIDAR"))
+        }
+        return alert.alert
+    }
+    
+    func getARVC(animationSettings: AnimationSettings, useLidar: Bool) -> UIViewController {
+        // LIDAR
+        if useLidar {
+            return ARLidarViewController(viewModel: .init())
+        }
+        
+        // standard
+        let ar = ARModel()
+        ar.model = modelObject
+        ar.lightSettings = lightingControl.light?.stringForm
+        ar.blendSettings = determineBlendMode(with: modelNode.geometry?.firstMaterial?.blendMode ?? .add)
+        ar.animationSettings = animationSettings
+        ar.lightColor = lightingControl.light?.color as? UIColor
+        ar.modelScale = ARModelScale
+        ar.rotationAxis = ARRotationAxis
+        ar.planeDirection = ARPlaneMode
+        return AugmentedRealityViewController.instantiate(viewModel: ar)
     }
 }
 
