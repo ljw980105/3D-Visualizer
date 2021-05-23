@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
     
-    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
         guard url.pathExtension == "stl" else { return true }
         UserDefaults.standard.set(true, forKey: "ThirdPartyLaunch")
         UserDefaults.standard.set(url, forKey: "OpenedModel")

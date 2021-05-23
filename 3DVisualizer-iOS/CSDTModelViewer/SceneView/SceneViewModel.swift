@@ -15,14 +15,19 @@ import Alamofire
 
 // converison to MVC in progress
 class SceneViewModel: NSObject {
-    var modelAsset: MDLAsset!
+    var lightingControl: SCNNode = .init()
+    var wigwaam: SCNNode?
+    var customURL = "None"
+    var modelObject: MDLMesh = .init()
+    var modelNode: SCNNode = .init()
+    var modelAsset: MDLAsset = .init()
     var ARModelScale: Float = 0.07
     var ARRotationAxis: String = "X"
-    var selectedColor: UIColor = UIColor.clear
-    var IntensityOrTemperature = true
+    var selectedColor: UIColor = .clear
+    var intensityOrTemperature = true
     var isFromWeb = false
     var blobLink: URL? = nil
-    
+    var ARPlaneMode: String = "Horizontal"
     override init() {
         super.init()
     }
@@ -31,6 +36,38 @@ class SceneViewModel: NSObject {
     
     // MARK: - Scene Loading
     
+    func load(customURL: String, isFromWeb: Bool) -> AnyPublisher<SceneLoadingResult, Error> {
+        SceneViewModel
+            .loadInitialModel(customURL: customURL, isFromWeb: isFromWeb)
+            .flatMap { result -> Future<MDLMesh, Error> in
+                self.modelAsset = result.asset
+                self.ARModelScale = result.arModelScale
+                self.blobLink = result.blob
+                return SceneViewModel.loadMeshFromAsset(result.asset)
+            }
+            .catch { error -> Future<MDLMesh, Error> in
+                print(error.localizedDescription)
+                let result = ModelLoadingResult.default
+                self.modelAsset = result.asset
+                self.ARModelScale = result.arModelScale
+                self.blobLink = result.blob
+                return SceneViewModel.loadMeshFromAsset(result.asset)
+            }
+            .flatMap { [weak self] mesh -> Future<SceneLoadingResult, Error> in
+                let sceneResult = SceneViewModel.createScene(from: mesh)
+                let scene = sceneResult.scene
+                self?.modelNode = sceneResult.node
+                self?.modelObject = mesh
+                self?.lightingControl = sceneResult.lightingControl
+                self?.wigwaam = scene.rootNode.childNodes.first
+                return Future { promise in
+                    promise(.success(sceneResult))
+                }
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    // MARK: Loading Helpers
     static func loadMeshFromAsset(_ asset: MDLAsset) -> Future<MDLMesh, Error> {
         Future { promise in
             if let object = asset.object(at: 0) as? MDLMesh { // valid model object from link
@@ -133,6 +170,61 @@ class SceneViewModel: NSObject {
             }
         }
         .eraseToAnyPublisher()
+    }
+    
+    //MARK: - Files
+    /// Write a file to the app's default document directory, with the file named by the given fileName
+    static func writeFile(
+        locatedAt source: String,
+        named fileName: String
+    ) throws {
+        guard let sourceURL = URL(string: source) else {
+            throw NSError(domain: "invalid soruce url", code: 0)
+        }
+        let fileManager = FileManager.default
+        let directory = try fileManager.url(
+            for: .documentDirectory,
+            in: .userDomainMask,
+            appropriateFor: nil,
+            create: false
+        )
+        let fileURL = directory.appendingPathComponent(fileName)
+        let modelData = try Data(contentsOf: sourceURL)
+        try modelData.write(to: fileURL)
+    }
+
+    // MARK: - Routing
+    func getSaveFileAlert(
+        customURL: String,
+        started: @escaping () -> Void,
+        completion: @escaping (String) -> Void
+    ) -> UIAlertController {
+        let saveAlert = UIAlertController(
+            title: "Save Model on Device?",
+            message: """
+            If so, enter the name of model in the text field, with no whitespaces.
+            Make sure that the file name ends with extension .stl .
+            """,
+            preferredStyle: .alert
+        )
+        saveAlert.addTextField { textfield in
+            textfield.text = ""
+        }
+        let dontSaveAction = UIAlertAction(title: "Don't Save", style: .cancel, handler: nil)
+        let saveAction = UIAlertAction(title: "Save", style: .default){ _ in
+            guard let fileName = saveAlert.textFields?.first?.text else { return }
+            do {
+                try SceneViewModel.writeFile(locatedAt: customURL, named: fileName)
+                completion("Success")
+            } catch let err {
+                completion(err.localizedDescription)
+            }
+        }
+        saveAlert.view.tintColor = customGreen()
+        saveAlert.addAction(dontSaveAction)
+        saveAlert.addAction(saveAction)
+        started()
+        return saveAlert
     }
 }
 

@@ -114,7 +114,7 @@ class TwoDSpecificsViewController: UIViewController, XMLParserDelegate {
             let ar = ARModel()
             ar.isThreeD = false
             ar.twoDImage = specificsImage.image
-            ar.lightSettings = determineLightType(with: SCNLight())
+            ar.lightSettings = SCNLight().stringForm
             ar.blendSettings = determineBlendMode(with: SCNBlendMode.alpha)
             ar.animationSettings = animationSettings.none
             ar.lightColor = UIColor.white
@@ -131,6 +131,12 @@ class TwoDSpecificsViewController: UIViewController, XMLParserDelegate {
 }
 
 // Helper function inserted by Swift 4.2 migrator.
-fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(_ input: [String: Any]) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
-	return Dictionary(uniqueKeysWithValues: input.map { key, value in (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)})
+fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(
+    _ input: [String: Any]
+) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
+	return Dictionary(
+        uniqueKeysWithValues: input.map { key, value in
+            (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)
+        }
+    )
 }

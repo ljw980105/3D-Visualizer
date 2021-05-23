@@ -225,7 +225,7 @@
                                     <color key="titleColor" red="0.1333333333" green="0.41176470590000003" blue="0.027450980390000001" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
-                                    <segue destination="tNc-x8-Nzf" kind="presentation" identifier="arsegue" modalTransitionStyle="flipHorizontal" id="tMZ-Hj-rYz"/>
+                                    <segue destination="tNc-x8-Nzf" kind="presentation" identifier="arsegue" modalPresentationStyle="fullScreen" modalTransitionStyle="flipHorizontal" id="tMZ-Hj-rYz"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -653,11 +653,11 @@
             <objects>
                 <viewController id="tNc-x8-Nzf" customClass="AugmentedRealityViewController" customModule="CSDTModelViewer" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="nsf-QK-CTr">
-                        <rect key="frame" x="0.0" y="0.0" width="390" height="790"/>
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" jitteringEnabled="YES" wantsMultisampling="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rjU-FU-b9A">
-                                <rect key="frame" x="0.0" y="0.0" width="390" height="756"/>
+                                <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                                 <gestureRecognizers/>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="9cj-Nf-QXY" appends="YES" id="R8K-p5-YP0"/>
@@ -667,7 +667,7 @@
                                 </connections>
                             </arscnView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QfC-6P-SGf">
-                                <rect key="frame" x="15" y="12" width="59" height="34"/>
+                                <rect key="frame" x="15" y="56" width="59" height="34"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="QfC-6P-SGf" secondAttribute="height" multiplier="26:15" id="2cJ-us-erV"/>
                                 </constraints>
@@ -680,7 +680,7 @@
                                 </connections>
                             </button>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EHj-Nc-RHQ">
-                                <rect key="frame" x="110" y="10" width="170" height="40"/>
+                                <rect key="frame" x="110" y="54" width="170" height="40"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="bPX-sp-WpD">
                                     <rect key="frame" x="0.0" y="0.0" width="170" height="40"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -704,7 +704,7 @@
                                 <blurEffect style="systemChromeMaterial"/>
                             </visualEffectView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="owz-dj-Mbs">
-                                <rect key="frame" x="327.33333333333331" y="13.999999999999996" width="42.666666666666686" height="42.666666666666657"/>
+                                <rect key="frame" x="327.33333333333331" y="58" width="42.666666666666686" height="42.666666666666657"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="owz-dj-Mbs" secondAttribute="height" multiplier="1:1" id="oYb-hP-I7C"/>
                                 </constraints>
@@ -720,7 +720,7 @@
                         <viewLayoutGuide key="safeArea" id="huz-ad-CNm"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="rjU-FU-b9A" firstAttribute="bottom" secondItem="huz-ad-CNm" secondAttribute="bottom" id="B4V-Ph-LjA"/>
+                            <constraint firstItem="rjU-FU-b9A" firstAttribute="bottom" secondItem="nsf-QK-CTr" secondAttribute="bottom" id="B4V-Ph-LjA"/>
                             <constraint firstItem="EHj-Nc-RHQ" firstAttribute="centerX" secondItem="huz-ad-CNm" secondAttribute="centerX" id="BlS-X9-8MX"/>
                             <constraint firstItem="QfC-6P-SGf" firstAttribute="top" secondItem="huz-ad-CNm" secondAttribute="top" constant="12" id="CTg-ny-JAw"/>
                             <constraint firstItem="rjU-FU-b9A" firstAttribute="top" secondItem="nsf-QK-CTr" secondAttribute="top" id="M1z-lD-y2C"/>

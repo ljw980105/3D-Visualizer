@@ -58,21 +58,23 @@ let stringToPlaneDetection: [String: ARWorldTrackingConfiguration.PlaneDetection
     "Vertical": .vertical
 ]
 
-func determineLightType(with light:SCNLight) -> String{
-    switch light.type{
-    case .omni:
-        return "Omnidirectional"
-    case .ambient:
-        return "Ambient"
-    case .directional:
-        return "Directional"
-    case .probe:
-        return "Probe"
-    case .spot:
-        return "Spot"
-    default: break
+extension SCNLight {
+    var stringForm: String {
+        switch type {
+        case .omni:
+            return "Omnidirectional"
+        case .ambient:
+            return "Ambient"
+        case .directional:
+            return "Directional"
+        case .probe:
+            return "Probe"
+        case .spot:
+            return "Spot"
+        default:
+            return "Omnidirectional"
+        }
     }
-    return "Omnidirectional"
 }
 
 func determineBlendMode(with mode: SCNBlendMode) -> String{
@@ -106,7 +108,7 @@ func determinePlaneDetectionMode(with mode: ARWorldTrackingConfiguration.PlaneDe
 }
 
 func overlayTextWithVisualEffect(using text:String, on view: UIView){
-    let blurEffect = UIBlurEffect(style: .prominent)
+    let blurEffect = UIBlurEffect(style: .systemChromeMaterial)
     let blurredEffectView = UIVisualEffectView(effect: blurEffect)
     let effectBounds = CGRect(
         origin: CGPoint(
@@ -123,21 +125,26 @@ func overlayTextWithVisualEffect(using text:String, on view: UIView){
     label.textAlignment = .center
     label.text = text
     label.font = label.font.withSize(30.0)
-    label.textColor = UIColor.black
+    label.textColor = UIColor.label
     label.adjustsFontSizeToFitWidth = true
     label.minimumScaleFactor = 0.6
     label.numberOfLines = 0
     
     view.addSubview(blurredEffectView)
     view.addSubview(label)
-    Timer.scheduledTimer(withTimeInterval: 1, repeats: false){ _ in
-        UIView.transition(with: blurredEffectView, duration: 0.25, options: [.transitionCrossDissolve],
-                          animations: {blurredEffectView.alpha = 0}){ _ in
-                            blurredEffectView.removeFromSuperview()
-        }
-        UIView.transition(with: label, duration: 0.25, options: [.transitionCrossDissolve],
-                          animations: {label.alpha = 0}){ _ in
-                            label.removeFromSuperview()
+    Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { _ in
+        [blurredEffectView, label].forEach { view in
+            UIView.transition(
+                with: view,
+                duration: 0.25,
+                options: [.transitionCrossDissolve],
+                animations: {
+                    view.alpha = 0
+                },
+                completion: { _ in
+                    view.removeFromSuperview()
+                }
+            )
         }
     }
 }

@@ -70,7 +70,7 @@ class ColorPickerCollectionView: UIViewController, UICollectionViewDelegate, UIC
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let dest = segue.destination as? SceneViewController{
-            dest.selectedColor = selectedColor
+            dest.viewModel.selectedColor = selectedColor
         }
     }
 }

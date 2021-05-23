@@ -131,7 +131,7 @@ extension ThreeDModelListTableViewController: UIViewControllerPreviewingDelegate
         guard let indexPath = tableView.indexPathForRow(at: location), let cell = tableView.cellForRow(at: indexPath), let threeDVC = storyboard?.instantiateViewController(withIdentifier: "sceneViewController") as? SceneViewController else { return nil }
         if indexPath.section == 0 {
             threeDVC.customURL = models[indexPath.row].path
-            threeDVC.ARModelScale = 0.002
+            threeDVC.viewModel.ARModelScale = 0.002
         } else if indexPath.section == 1{
             threeDVC.customURL = savedModels[indexPath.row].path
         }
