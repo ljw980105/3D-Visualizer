@@ -54,7 +54,7 @@ class TwoDSpecificsViewController: UIViewController, XMLParserDelegate {
         }
         
         DispatchQueue.global(qos: .userInteractive).async {
-            Alamofire.request(self.specificData.4).response{ response in
+            AF.request(self.specificData.4).response{ response in
                 guard response.error == nil else { return }
                 if let data = response.data{
                     let parser = XMLParser(data: data)
@@ -86,7 +86,7 @@ class TwoDSpecificsViewController: UIViewController, XMLParserDelegate {
     }
     
     @IBAction func openModelLink(_ sender: UIBarButtonItem) {
-        UIApplication.shared.open(URL(string: specificData.3)!, options: [:], completionHandler: nil)
+        UIApplication.shared.open(URL(string: specificData.3)!, options: convertToUIApplicationOpenExternalURLOptionsKeyDictionary([:]), completionHandler: nil)
     }
     
     @IBAction func changePlaneDirection(_ sender: UIBarButtonItem) {
@@ -114,7 +114,7 @@ class TwoDSpecificsViewController: UIViewController, XMLParserDelegate {
             let ar = ARModel()
             ar.isThreeD = false
             ar.twoDImage = specificsImage.image
-            ar.lightSettings = determineLightType(with: SCNLight())
+            ar.lightSettings = SCNLight().stringForm
             ar.blendSettings = determineBlendMode(with: SCNBlendMode.alpha)
             ar.animationSettings = animationSettings.none
             ar.lightColor = UIColor.white
@@ -128,4 +128,15 @@ class TwoDSpecificsViewController: UIViewController, XMLParserDelegate {
         }
     }
     
+}
+
+// Helper function inserted by Swift 4.2 migrator.
+fileprivate func convertToUIApplicationOpenExternalURLOptionsKeyDictionary(
+    _ input: [String: Any]
+) -> [UIApplication.OpenExternalURLOptionsKey: Any] {
+	return Dictionary(
+        uniqueKeysWithValues: input.map { key, value in
+            (UIApplication.OpenExternalURLOptionsKey(rawValue: key), value)
+        }
+    )
 }

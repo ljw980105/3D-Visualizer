@@ -82,7 +82,7 @@ class ModelPickerViewController: UIViewController {
     
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let dest = segue.destination as? SceneViewController{
+        if let dest = segue.destination as? SceneViewController {
             if customURL != "None"{
                 dest.isFromWeb = true
                 dest.customURL = customURL

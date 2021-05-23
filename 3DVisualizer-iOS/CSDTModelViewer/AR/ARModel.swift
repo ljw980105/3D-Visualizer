@@ -35,7 +35,7 @@ class ARModel:NSObject{
         super.init()
     }
     
-    func configureHitTest(with hit:ARHitTestResult){
+    func configureHitTest(with hit: ARHitTestResult) {
         if isThreeD{
             nodeToUse = SCNNode(mdlObject: model)
         } else {
@@ -53,7 +53,7 @@ class ARModel:NSObject{
         
         nodeToUse.scale = SCNVector3Make(modelScale, modelScale, modelScale)
         nodeToUse.position = SCNVector3Make(hit.worldTransform.columns.3.x, hit.worldTransform.columns.3.y, hit.worldTransform.columns.3.z)
-        nodeToUse.geometry?.firstMaterial?.blendMode = stringToBlendMode[blendSettings]!
+        nodeToUse.geometry?.firstMaterial?.blendMode = stringToBlendMode[blendSettings] ?? .max
         isModelAdded = true
     }
     
@@ -95,7 +95,7 @@ class ARModel:NSObject{
         newPlane.position = SCNVector3Make(planeAnchor.center.x, Float(planeHeight/2), planeAnchor.center.z)
         
         lightingControl.light = SCNLight()
-        lightingControl.light?.type = .directional//stringToLightType[lightSettings]!
+        lightingControl.light?.type = .directional
         lightingControl.light?.intensity = 10000
         lightingControl.position = SCNVector3Make(242, 100, 118)
         lightingControl.light?.color = lightColor

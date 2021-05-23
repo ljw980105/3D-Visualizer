@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ThreeDModelListTableViewController: UITableViewController, UIViewControllerPreviewingDelegate {
+class ThreeDModelListTableViewController: UITableViewController {
     
     var modelNames: [[String]] = [[],[]]
     let sectionTitles = ["Default Models", "Saved Models"]
@@ -111,7 +111,7 @@ class ThreeDModelListTableViewController: UITableViewController, UIViewControlle
         return indexPath.section == 0 ? false : true
     }
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete{
             modelNames[indexPath.section].remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
@@ -123,13 +123,15 @@ class ThreeDModelListTableViewController: UITableViewController, UIViewControlle
             }
         }
     }
-    
+}
+
+extension ThreeDModelListTableViewController: UIViewControllerPreviewingDelegate {
     // MARK: UIViewControllerPreviewingDelegate
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         guard let indexPath = tableView.indexPathForRow(at: location), let cell = tableView.cellForRow(at: indexPath), let threeDVC = storyboard?.instantiateViewController(withIdentifier: "sceneViewController") as? SceneViewController else { return nil }
         if indexPath.section == 0 {
             threeDVC.customURL = models[indexPath.row].path
-            threeDVC.ARModelScale = 0.002
+            threeDVC.viewModel.ARModelScale = 0.002
         } else if indexPath.section == 1{
             threeDVC.customURL = savedModels[indexPath.row].path
         }
@@ -144,5 +146,4 @@ class ThreeDModelListTableViewController: UITableViewController, UIViewControlle
         self.tabBarController?.tabBar.isHidden = true
         present(viewControllerToCommit, animated: true, completion: nil)
     }
- 
 }

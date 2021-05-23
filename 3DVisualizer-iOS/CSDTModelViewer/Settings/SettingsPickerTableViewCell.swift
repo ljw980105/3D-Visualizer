@@ -9,7 +9,7 @@
 import UIKit
 
 class SettingsPickerTableViewCell: UITableViewCell, UIPickerViewDelegate, UIPickerViewDataSource {
-    var dataSource: [String]! = ["X","Y","Z"] // defaulting to x y z
+    var dataSource: [String] = ["X","Y","Z"] // defaulting to x y z
     var selectedSetting: String!
     @IBOutlet weak var pickerTitle: UILabel!
     @IBOutlet weak var pickerView: UIPickerView!
@@ -31,13 +31,14 @@ class SettingsPickerTableViewCell: UITableViewCell, UIPickerViewDelegate, UIPick
     }
 
     func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-        pickerView.subviews[row].backgroundColor = UIColor.white
-        return NSAttributedString(string: dataSource[row], attributes: [NSAttributedStringKey.foregroundColor: UIColor.black])
+        return NSAttributedString(
+            string: dataSource[row],
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.labelColor]
+        )
     }
     
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
-        pickerView.showsSelectionIndicator = true
     }
 
     override func awakeFromNib() {

@@ -7,5 +7,4 @@ target 'CSDTModelViewer' do
 
   # Pods for CSDTModelViewer
   pod 'Alamofire'
-
 end
